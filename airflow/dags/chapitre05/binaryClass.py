@@ -5,7 +5,8 @@ from pyspark.ml.tuning import ParamGridBuilder, CrossValidator
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 import datetime
 import os
-spark = SparkSession.builder.appName('binary_class').getOrCreate()
+from airflow.decorators import task
+
 
 
 def groupeDataBy(data: DataFrame, column: str):
@@ -99,6 +100,7 @@ def forestClassifier(trainedModel: DataFrame, test_data: DataFrame):
 
 
 def trainingModelCustom(filePath: str):
+    spark = SparkSession.builder.appName('binary_class').getOrCreate()
     input_data = spark.read.csv(filePath, header=True, inferSchema=True)
     print("DONNEES D'ENTREE")
     input_data.show()
@@ -111,6 +113,7 @@ def trainingModelCustom(filePath: str):
     training_account_data, test = assembledData.randomSplit([0.75, 0.25])
     return trainingModel(training_account_data, test)
 
-
+@task 
 def chapitre5():
     trainingModelCustom("./data/account_info.csv")
+

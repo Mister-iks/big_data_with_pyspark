@@ -1,8 +1,9 @@
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
 from pyspark.sql.types import *
+from airflow.decorators import task
 
-
+@task
 def chapitre3():
     spark = SparkSession.builder.appName('structured_streaming').getOrCreate()
     employees_data = [

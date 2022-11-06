@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
 from pyspark.sql.types import *
-spark = SparkSession.builder.appName('data_frame').getOrCreate()
+from airflow.decorators import task
 
 
 # def display_data():
@@ -34,9 +34,10 @@ def read_csv(path: str):
     ------
     `pyspark.sql.DataFrame.show`
     """
+    spark = SparkSession.builder.appName('data_frame').getOrCreate()
     file = spark.read.csv(path=path, header=True, inferSchema=True)
     return file.show()
 
-
+@task
 def chapitre2():
     read_csv("./employees_1.csv", 20)
